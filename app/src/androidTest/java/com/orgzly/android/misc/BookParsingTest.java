@@ -142,6 +142,47 @@ public class BookParsingTest extends OrgzlyTest {
     }
 
     @Test
+    public void testCustomDrawer() {
+        // Test for orgzly-revived/orgzly-android-revived#95
+        onBook("* Note 1\n" +
+                "  :PROPERTIES:\n" +
+                "  :LAST_REPEAT: [2017-04-03 Mon 10:26]\n" +
+                "  :STYLE:    habit\n" +
+                "  :CREATED:  [2015-11-23 Mon 01:33]\n" +
+                "  :END:\n"  +
+                "  test1\n" +
+                "* Note 2\n" +
+                "  :PROPERTIES:\n" +
+                "  :CREATED:  [2015-11-23 Mon 01:33]\n" +
+                "  :LAST_REPEAT: [2017-04-03 Mon 10:26]\n" +
+                "  :STYLE:    habit\n" +
+                "  :END:\n" +
+                "  :OTHERDRAWER:\n" +
+                "  :END:\n" +
+                "  test2\n").onLoad()
+                .isWhenSaved("* Note 1\n" +
+                        "  :PROPERTIES:\n" +
+                        "  :LAST_REPEAT: [2017-04-03 Mon 10:26]\n" +
+                        "  :STYLE:    habit\n" +
+                        "  :CREATED:  [2015-11-23 Mon 01:33]\n" +
+                        "  :END:\n" +
+                        "\n" +
+                        "  test1\n" +
+                        "\n" +
+                        "* Note 2\n" +
+                        "  :PROPERTIES:\n" +
+                        "  :CREATED:  [2015-11-23 Mon 01:33]\n" +
+                        "  :LAST_REPEAT: [2017-04-03 Mon 10:26]\n" +
+                        "  :STYLE:    habit\n" +
+                        "  :END:\n" +
+                        "\n" + // this is wrong, this line should be below the OTHERDRAWER END
+                        "  :OTHERDRAWER:\n" +
+                        "  :END:\n" +
+                        "  test2\n" +
+                        "\n");
+    }
+
+    @Test
     public void testPropertiesEmpty() {
         onBook("* Note 1\n" +
                "  :PROPERTIES:\n" +
