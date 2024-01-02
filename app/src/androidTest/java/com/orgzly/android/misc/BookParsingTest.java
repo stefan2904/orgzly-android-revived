@@ -142,6 +142,47 @@ public class BookParsingTest extends OrgzlyTest {
     }
 
     @Test
+    public void testLogbookDrawer() {
+        // Test for orgzly-revived/orgzly-android-revived#95
+        onBook("* Note 1\n" +
+                "  :PROPERTIES:\n" +
+                "  :LAST_REPEAT: [2017-04-03 Mon 10:26]\n" +
+                "  :STYLE:    habit\n" +
+                "  :CREATED:  [2015-11-23 Mon 01:33]\n" +
+                "  :END:\n"  +
+                "  test1\n" +
+                "* Note 2\n" +
+                "  :PROPERTIES:\n" +
+                "  :CREATED:  [2015-11-23 Mon 01:33]\n" +
+                "  :LAST_REPEAT: [2017-04-03 Mon 10:26]\n" +
+                "  :STYLE:    habit\n" +
+                "  :END:\n" +
+                "  :LOGBOOK:\n" +
+                "  CLOCK: [2016-10-27 Thu 18:40]--[2016-10-27 Thu 18:51] =>  0:11\n" +
+                "  :END:\n" +
+                "  test2\n").onLoad()
+                .isWhenSaved("* Note 1\n" +
+                        "  :PROPERTIES:\n" +
+                        "  :LAST_REPEAT: [2017-04-03 Mon 10:26]\n" +
+                        "  :STYLE:    habit\n" +
+                        "  :CREATED:  [2015-11-23 Mon 01:33]\n" +
+                        "  :END:\n" +
+                        "\n" +
+                        "  test1\n" +
+                        "\n" +
+                        "* Note 2\n" +
+                        "  :PROPERTIES:\n" +
+                        "  :CREATED:  [2015-11-23 Mon 01:33]\n" +
+                        "  :LAST_REPEAT: [2017-04-03 Mon 10:26]\n" +
+                        "  :STYLE:    habit\n" +
+                        "  :END:\n" +
+                        "  :LOGBOOK:\n" +
+                        "  CLOCK: [2016-10-27 Thu 18:40]--[2016-10-27 Thu 18:51] =>  0:11\n" +
+                        "  :END:\n" + // org-java behaviour is to NOT add a empty line (\n\n) here
+                        "  test2\n" +
+                        "\n");
+    }
+    @Test
     public void testCustomDrawer() {
         // Test for orgzly-revived/orgzly-android-revived#95
         onBook("* Note 1\n" +
@@ -174,8 +215,7 @@ public class BookParsingTest extends OrgzlyTest {
                         "  :CREATED:  [2015-11-23 Mon 01:33]\n" +
                         "  :LAST_REPEAT: [2017-04-03 Mon 10:26]\n" +
                         "  :STYLE:    habit\n" +
-                        "  :END:\n" +
-                        "\n" + // this is wrong, this line should be below the OTHERDRAWER END
+                        "  :END:\n" + // Goal: no empty line (\n\n) added before any drawer
                         "  :OTHERDRAWER:\n" +
                         "  :END:\n" +
                         "  test2\n" +
